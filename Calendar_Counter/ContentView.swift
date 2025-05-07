@@ -9,11 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isShowDateView = false
+    @StateObject var vm = ViewModel()
     
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading, spacing: 0.0) {
-                Text("6.05")
+                Text(Date.now.formatToString())
                     .font(.system(size: 20, weight: .bold))
                     .foregroundStyle(Color(hex: "727272"))
                 
@@ -24,7 +25,7 @@ struct ContentView: View {
                     Spacer()
                     chevron
                     Spacer()
-                    Text("3 days")
+                    Text(vm.endDate)
                         .foregroundStyle(Color(hex: "00A907"))
                         .font(.system(size: 40, weight: .bold))
                         .onTapGesture {
@@ -34,7 +35,7 @@ struct ContentView: View {
               
             }
             Spacer()
-            Text("Start in three days")
+            Text(vm.mainText.isEmpty ? "" : "in " + vm.mainText + " days")
                 .font(.system(size: 40, weight: .bold))
                 .foregroundStyle(.white)
             Spacer()
@@ -44,7 +45,7 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(hex: "2D2D2D"))
         .sheet(isPresented: $isShowDateView) {
-            DateView()
+            DateView(vm: vm)
                 .presentationDetents([.height(600)])
         }
     }
@@ -73,6 +74,7 @@ struct DateView: View {
     @State var selectedDate: Date = Date()
     @State var text: String = ""
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var vm: ViewModel
     
     var body: some View {
         VStack(spacing: 26.0) {
@@ -90,7 +92,9 @@ struct DateView: View {
                 .background(Color(hex: "1C1C1E"))
                 .clipShape(.rect(cornerRadius: 20))
             
+            //MARK: Кнопка сохранения введенных данных
             Button {
+                vm.save(text: text, and: selectedDate)
                 dismiss()
             } label: {
                 Text("Set")
