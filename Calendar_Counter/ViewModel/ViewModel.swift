@@ -42,12 +42,9 @@ final class ViewModel: ObservableObject {
         self.endDate = date.formatToString()
     }
     
-    //{date} - высчитываемое значение оставшихся дней до события
-    ///Party after {date} days
+    //считает значение оставшихся дней до события
     private func formatDiffDateTo(text: String, from date: Date) -> String? {
-        //"{date}"
-//        guard let range = text.range(of: "%d") else { return nil } //диапазон символов описывающих дату
-        guard let range = text.range(of: "{date}") else { return nil }
+        guard let range = text.range(of: "{date}") else { return nil } //диапазон символов описывающих дату
         let startPosition = text.distance(from: text.startIndex, to: range.lowerBound) //Position первого символа даты
         let endPosition = text.distance(from: text.startIndex, to: range.upperBound) //Position последнего символа даты
         
